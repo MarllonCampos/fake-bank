@@ -10,11 +10,11 @@ type UserProperties = {
 
 class UserService {
   async store(body: UserProperties) {
-
+    const formattedUsername = body.username.toLowerCase()
     const account = await AccountService.store()
     const user = await db.Users.create({
       id: uuidv4(),
-      username: body.username,
+      username: formattedUsername,
       password: body.password,
       accountId: account.id
     })
@@ -23,7 +23,8 @@ class UserService {
     return user
   }
   async find(username: string) {
-    const user = await db.Users.findOne({ where: { username }, attributes: ['username', 'accountId'] });
+    const formattedUsername = username.toLowerCase();
+    const user = await db.Users.findOne({ where: { username: formattedUsername }, attributes: ['username', 'accountId'] });
     return user
   }
 
