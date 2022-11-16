@@ -5,6 +5,7 @@ dotenv.config()
 
 interface TokenPayload {
   id: string;
+  accountId: string;
   iat: number;
   exp: number;
 }
@@ -18,11 +19,11 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
 
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET || "SECRET")
-    const { id } = data as TokenPayload
+    const { id, accountId } = data as TokenPayload
     req.userId = id
-
+    req.userAccountId = accountId
     return next()
   } catch {
-    return res.status(401).json({ message: 'You lost connection, please login again' })
+    return res.status(401).json({ message: 'You lost connection, please log again' })
   }
 }

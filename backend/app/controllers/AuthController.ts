@@ -20,8 +20,7 @@ class AuthController {
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'User not found' })
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'SECRET', { expiresIn: '1d' })
-
+    const token = jwt.sign({ id: user.id, accountId: user.accountId }, process.env.JWT_SECRET || 'SECRET', { expiresIn: '1d' })
     const responseUser = {
       id: user.id,
       username: user.username,
