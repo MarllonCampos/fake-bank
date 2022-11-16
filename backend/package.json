@@ -7,6 +7,7 @@
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.25.5",
@@ -15,11 +16,12 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "dev": "yarn tsnd --respawn server.ts"
+    "dev": "yarn tsnd --files --respawn server.ts"
   },
   "devDependencies": {
     "@types/continuation-local-storage": "^3.2.4",
     "@types/express": "^4.17.14",
+    "@types/jsonwebtoken": "^8.5.9",
     "@types/sequelize": "^4.28.14",
     "@types/uuid": "^8.3.4",
     "dotenv": "^16.0.3",

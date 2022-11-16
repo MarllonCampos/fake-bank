@@ -7,7 +7,6 @@ route.get('/', UserController.index)
 
 route.get('/:username', UserController.show)
 
-route.post('/', UserController.store)
 
 
 
