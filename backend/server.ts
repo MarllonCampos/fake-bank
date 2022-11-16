@@ -6,7 +6,7 @@ import db from './models'
 dotenv.config()
 
 const PORT = process.env.PORT || 3000
-db.sequelize.sync({ force: true }).then(() => { // Using this because node doesnt has top level await
+db.sequelize.sync({ force: true }).then(() => { // Using this because node doesnt have top level await
   const server = express();
   const route = Router();
   server.use(express.json())

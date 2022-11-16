@@ -7,9 +7,10 @@ class UserController {
 
   async store(req: Request, res: Response) {
     const { username, password } = req.body
-    if (!username) {
-      return res.status(400).json({ message: 'User must have a username' })
+    if (!username || username.length < 3) {
+      return res.status(400).json({ message: 'User must have a username with atleast 3 characters' })
     }
+
 
     if (!password) {
       return res.status(400).json({ message: 'User must have a password' })
@@ -20,7 +21,8 @@ class UserController {
     }
 
     const hashedPassword = await hashPassword(password)
-    const user = await UserService.store({ username, password: hashedPassword })
+    const formattedUsername = username.toLowerCase();
+    const user = await UserService.store({ username: formattedUsername, password: hashedPassword })
 
     return res.status(201).json({ message: 'User created successfully' })
   }

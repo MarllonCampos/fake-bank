@@ -10,7 +10,6 @@ const validatePasswordCriterias = [hasCapitalLetters, hasNumbers, moreThan8Chars
 function isPasswordValid(password: string): boolean {
   let error = false;
   for (let validateFunction of validatePasswordCriterias) {
-    console.log(validateFunction(password))
     if (!validateFunction(password)) {
       error = false
       break
@@ -33,6 +32,7 @@ function hasNumbers(string: string): boolean {
 function moreThan8Chars(string: string): boolean {
   return string.length > 7
 }
+
 export { hashPassword, isPasswordValid }
 
 
