@@ -25,8 +25,12 @@ class UserService {
 
     return user
   }
-  async find() {
+  async find(body: UserProperties) {
 
+    bcrypt.compare(body.password, hash, function (err, res) {
+      // res is true as the original password is the same
+      // res == true
+    });
   }
 
   async show() {
