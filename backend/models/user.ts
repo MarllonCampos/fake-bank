@@ -21,6 +21,7 @@ export default (sequelize: any, DataTypes: any) => {
     password!: string;
     static associate(models: any) {
       // define association here
+      console.log('ASSOCIATE USERS')
       Users.hasOne(models.Accounts)
     }
   }
