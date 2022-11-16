@@ -22,7 +22,8 @@ export default (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       // define association here
       console.log('ASSOCIATE USERS')
-      Users.hasOne(models.Accounts)
+      Users.belongsTo(models.Accounts, { foreignKey: 'accountId' })
+
     }
   }
   Users.init({

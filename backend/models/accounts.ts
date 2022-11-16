@@ -13,8 +13,9 @@ export default (sequelize: any, DataTypes: any) => {
     balance!: number;
     static associate(models: any) {
       // define association here
-      Accounts.belongsTo(models.Users)
+      Accounts.hasOne(models.Users, { foreignKey: 'accountId' })
     }
+
   }
   Accounts.init({
     id: {

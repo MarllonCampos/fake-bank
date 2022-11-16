@@ -1,22 +1,19 @@
-import Account from "../database/models/account";
-import User from "../database/models/user";
+import { v4 as uuidv4 } from 'uuid';
 import AccountService from "./AccountService";
+import db from '../../models'
 
 type UserProperties = {
   username: string;
   password: string;
 }
 
-type AccountProperty = {
-  id: number;
-  balance: number;
-}
 
 class UserService {
   async store(body: UserProperties) {
 
-    const account: any = await AccountService.store()
-    const user = await User.create({
+    const account = await AccountService.store()
+    const user = await db.Users.create({
+      id: uuidv4(),
       username: body.username,
       password: body.password,
       accountId: account.id
@@ -25,16 +22,13 @@ class UserService {
 
     return user
   }
-  async find(body: UserProperties) {
-
-    bcrypt.compare(body.password, hash, function (err, res) {
-      // res is true as the original password is the same
-      // res == true
-    });
+  async find(username: string) {
+    const user = await db.Users.findOne({ where: { username }, attributes: ['username', 'accountId'] });
+    return user
   }
 
-  async show() {
-
+  async findAll() {
+    return await db.Users.findAll({ attributes: ["username", "accountId"] })
   }
 }
 

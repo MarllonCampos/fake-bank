@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import UserService from '../services/UserService'
-import { hashPassword } from '../utils'
+import { hashPassword, isPasswordValid } from '../utils'
+
+
 class UserController {
 
   async store(req: Request, res: Response) {
@@ -13,20 +15,26 @@ class UserController {
       return res.status(400).json({ message: 'User must have a password' })
     }
 
-    const hashedPassword = hashPassword(password)
-    const user = await UserService.store({ username, password: await hashedPassword })
+    if (!isPasswordValid(password)) {
+      return res.status(400).json({ message: 'Password must have a capital letter, a number and atleast 8 characters' })
+    }
+
+    const hashedPassword = await hashPassword(password)
+    const user = await UserService.store({ username, password: hashedPassword })
 
     return res.status(201).json({ message: 'User created successfully' })
   }
 
-  async show() {
-    return 'show user'
+  async show(req: Request, res: Response) {
+    const { username } = req.params
+    const user = await UserService.find(username)
+    return res.status(200).json(user)
   }
 
 
-  async index() {
-    console.log('findAll')
-    return 'findAll user'
+  async index(req: Request, res: Response) {
+    const users = await UserService.findAll()
+    return res.status(200).json({ users })
   }
 }
 
