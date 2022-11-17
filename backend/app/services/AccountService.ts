@@ -19,14 +19,17 @@ class AccountService {
 
   }
 
-  async update(accountId: string, newValue: number) {
-    const [columnsChanged] = await db.Accounts.update({ value: newValue }, {
+  async update(accountId: string, newValue: number, transaction?: any) {
+    const [row, data] = await db.Accounts.update({ balance: newValue }, {
       where: {
         id: accountId
-      }
+      },
+      transaction,
+      returning: true,
+      plain: true
     });
-    if (columnsChanged < 1) throw new Error('Error trying to update account')
-    return columnsChanged
+    if (!data) throw new Error('Error trying to change account balance')
+    return data.balance
   }
 }
 
