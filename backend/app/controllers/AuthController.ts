@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import UserService from '../services/UserService'
 import { compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
@@ -13,12 +12,12 @@ class AuthController {
     const user = await db.Users.findOne({ where: { username: formattedUsername } });
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found' })
+      return res.status(400).json({ message: 'User not found' })
     }
     const isPasswordValid = await compare(password, user.password)
 
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'User not found' })
+      return res.status(400).json({ message: 'User not found' })
     }
     const token = jwt.sign({ id: user.id, accountId: user.accountId }, process.env.JWT_SECRET || 'SECRET', { expiresIn: '1d' })
     const responseUser = {

@@ -9,12 +9,24 @@ class AccountService {
     return account
   }
 
-  async find() {
-
+  async find(accountId: string) {
+    const accountInfo = await db.Accounts.findByPk(accountId)
+    if (!accountInfo) throw new Error('User not found')
+    return accountInfo
   }
 
   async show() {
 
+  }
+
+  async update(accountId: string, newValue: number) {
+    const [columnsChanged] = await db.Accounts.update({ value: newValue }, {
+      where: {
+        id: accountId
+      }
+    });
+    if (columnsChanged < 1) throw new Error('Error trying to update account')
+    return columnsChanged
   }
 }
 

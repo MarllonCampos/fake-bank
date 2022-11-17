@@ -19,7 +19,9 @@
 
 # Account
 
-- [] Read Account
+- [x] Create Account
+- [x] Read Account
+- [x] Update Account
 
 # Transaction
 
