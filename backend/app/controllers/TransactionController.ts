@@ -4,6 +4,7 @@ import AccountService from '../services/AccountService';
 import UserService from '../services/UserService';
 import db from '../../models';
 import TransactionService from '../services/TransactionService';
+import { matchesFilterQuery, matchesOrderByQuery } from '../utils';
 dotenv.config()
 
 class TransactionController {
@@ -45,7 +46,6 @@ class TransactionController {
       }
       const newDebitedUserBalance = debitedUserBalance - value
 
-      console.log(newDebitedUserBalance)
 
       const userNewBalance = await AccountService.update(userAccountId, newDebitedUserBalance, transaction)
 
@@ -67,7 +67,22 @@ class TransactionController {
   }
 
   async index(req: Request, res: Response) {
-    return res.send('ok')
+    const { userAccountId } = req
+    const { orderBy = 'desc', filter = 'date' } = req.query
+    const formattedOrderBy = String(orderBy).toLowerCase()
+    const formattedFilter = String(filter).toLowerCase()
+    if (!matchesFilterQuery(formattedFilter)) {
+      return res.status(400).json({ message: 'Filter must be one of the following options: sent, received or  date' })
+    }
+    if (!matchesOrderByQuery(formattedOrderBy)) {
+      return res.status(400).json({ message: 'Orderby must be one of the following options: asc, desc' })
+    }
+    const transactions = await TransactionService.find(userAccountId, { orderBy: formattedOrderBy, filter: formattedFilter })
+
+    const filteredTransactions = transactions.map((transaction: any) => transaction.Account)
+
+
+    return res.status(200).json({ message: 'Ok', body: transactions })
   }
 }
 
