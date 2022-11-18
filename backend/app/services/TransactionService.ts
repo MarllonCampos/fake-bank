@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import AccountService from "./AccountService";
 import db from '../../models'
-
 type TransactionProperties = {
   debitedAccountId: string;
   creditedAccountId: string;
@@ -11,7 +10,13 @@ type TransactionProperties = {
 type FilterParamsProperties = {
   orderBy: string;
   filter: string;
+  date: string;
 }
+type FilterOptionsOBject = {
+  sent: string;
+  received: string;
+}
+type objectFilter = keyof FilterOptionsOBject
 
 
 class TransactionService {
@@ -24,15 +29,29 @@ class TransactionService {
   }
 
 
+
+
   async find(userAccountId: string, filterParams: FilterParamsProperties) {
-    const { filter, orderBy } = filterParams
+    const { filter, orderBy, date } = filterParams
 
     const filterOptionsObject = {
       sent: 'debitedAccountId',
       received: 'creditedAccountId',
     }
-    if (filter === 'sent') { }
-    const operator = 'x';
+
+    const columnName = filterOptionsObject[filter as objectFilter]
+    let createdAt;
+    if (date) {
+      const startDate = new Date(date)
+      startDate.setUTCHours(0, 0, 0, 0);
+
+      const finalDate = new Date(startDate)
+      finalDate.setUTCHours(23, 59, 59, 999);
+
+      createdAt = {
+        [db.Sequelize.Op.between]: [startDate, finalDate]
+      }
+    }
     const transactions = await db.Transactions.findAll({
       include: [{
         model: db.Accounts,
@@ -42,9 +61,10 @@ class TransactionService {
         }
       }],
       where: {
-        debitedAccountId: {
-          userAccountId
-        }
+        [db.Sequelize.Op.and]: [
+          { [columnName]: userAccountId },
+          createdAt && { createdAt }
+        ]
       },
       order: [['createdAt', orderBy]],
       attributes: ['value', 'createdAt', 'debitedAccountId']
