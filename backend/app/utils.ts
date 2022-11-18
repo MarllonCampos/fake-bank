@@ -32,7 +32,21 @@ function moreThan8Chars(string: string): boolean {
   return string.length > 7
 }
 
-export { hashPassword, isPasswordValid }
+
+function matchesArray(array: Array<string>, string: string): boolean {
+  const formattedString = string.toLowerCase()
+  return array.some(word => formattedString === word)
+}
+function matchesFilterQuery(string: string): boolean {
+  const filterWords = ['sent', 'received', 'date']
+  return matchesArray(filterWords, string)
+}
+
+function matchesOrderByQuery(string: string): boolean {
+  const filterWords = ['asc', 'desc']
+  return matchesArray(filterWords, string)
+}
+export { hashPassword, isPasswordValid, matchesFilterQuery, matchesOrderByQuery }
 
 
 
