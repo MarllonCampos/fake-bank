@@ -9,8 +9,12 @@ export const Container = styled.div`
 
 
 export const RightSideContainer = styled.div`
+  display:flex;
   align-items: center;
-  
+  justify-content: center;
+  flex-direction: column;
+  gap: ${props => props.theme.spacing.xxlarge};
+
   padding: 32px 24px;
   max-width: 420px;
   width: 100%;
@@ -21,8 +25,28 @@ export const RightSideContainer = styled.div`
     font-size: 36px;
     text-align: center;
   }
-  .login-title {
-    font-size: 24px;
+  
+  .login-box {
+
+    width: 100%;
+    
+    &__title {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    
+    &__login {
+      color: ${props => props.theme.gray[900]};
+      margin-top: ${props => props.theme.spacing.large};
+
+      font-size: 14px;
+      a {
+        color: ${props => props.theme.primary.light};
+        font-weight: bold;
+        
+      }
+    }
   }
 
 `

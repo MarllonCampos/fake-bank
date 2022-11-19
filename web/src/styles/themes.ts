@@ -16,7 +16,23 @@ export default {
     '100': "#E6E6E6",
   },
   backgroundColor: "#FAFAFA",
-  textColor: "#FFFFFF"
+  textColor: "#FFFFFF",
+
+  spacing: {
+    small: "4px",
+    medium: "8px",
+    large: "16px",
+    xlarge: "32px",
+    xxlarge: "64px"
+  },
+
+  radius: {
+    small: "4px",
+    medium: "8px",
+    large: "16px",
+    xlarge: "32px",
+    xxlarge: "64px"
+  }
 }
 
 export interface ThemeType {
@@ -37,5 +53,19 @@ export interface ThemeType {
     '100': string,
   },
   backgroundColor: string,
-  textColor: string
+  textColor: string,
+  spacing: {
+    small: string,
+    medium: string,
+    large: string,
+    xlarge: string,
+    xxlarge: string
+  }
+  radius: {
+    small: string,
+    medium: string,
+    large: string,
+    xlarge: string,
+    xxlarge: string
+  }
 }

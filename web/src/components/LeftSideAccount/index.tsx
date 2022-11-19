@@ -1,12 +1,16 @@
-import React from "react";
-
 import { Container } from "./styles";
 import phone from "../../assets/phone.png";
 
-const LeftSideAccount: React.FC = () => {
+interface LeftSideAccountProps {
+  image: string;
+}
+const LeftSideAccount = ({
+  image,
+  ...props
+}: LeftSideAccountProps) => {
   return (
     <Container>
-      <img src={phone} alt="A smartphone tilted" />
+      <img src={image} alt="A smartphone tilted" />
     </Container>
   );
 };

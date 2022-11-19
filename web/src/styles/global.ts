@@ -26,5 +26,7 @@ export default createGlobalStyle<{ theme: ThemeType }>`
     height: 100%;
   }
 
-
+  a {
+    text-decoration:none;
+  }
 `
