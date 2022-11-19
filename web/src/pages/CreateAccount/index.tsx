@@ -4,9 +4,15 @@ import { Container, RightSideContainer } from "./styles";
 import LeftSideAccount from "../../components/LeftSideAccount";
 import UserForm from "../../components/UserForm";
 import phone from "../../assets/phone.png";
+import { Helmet } from "react-helmet";
+
 const CreateAccount: React.FC = () => {
   return (
     <Container>
+      <Helmet>
+        <title>Fake Bank | Create Account</title>
+      </Helmet>
+
       <LeftSideAccount image={phone} />
 
       <RightSideContainer>

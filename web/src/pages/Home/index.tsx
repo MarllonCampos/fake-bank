@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Container, RightSideContainer } from "./styles";
 import LeftSideAccount from "../../components/LeftSideAccount";
 import phoneTilted from "../../assets/phone-tilted.png";
 import UserForm from "../../components/UserForm";
-
+import { Helmet } from "react-helmet";
 const Home: React.FC = () => {
   return (
     <Container>
+      <Helmet>
+        <title>Fake Bank | Login</title>
+      </Helmet>
       <LeftSideAccount image={phoneTilted} />
 
       <RightSideContainer>
