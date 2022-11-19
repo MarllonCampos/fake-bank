@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Container, RightSideContainer } from "./styles";
 import LeftSideAccount from "../../components/LeftSideAccount";
-const Home: React.FC = () => {
+const CreateAccount: React.FC = () => {
   return (
     <Container>
       <LeftSideAccount />
@@ -11,9 +11,7 @@ const Home: React.FC = () => {
         <h1 className="title">&lt;NG.CASH&gt;</h1>
 
         <div className="login-box">
-          <h3 className="login-title">
-            Log with your credentials
-          </h3>
+          <h3 className="login-title">Create an account</h3>
           <input type="text" />
           <input type="text" />
           <button>Sign In</button>
@@ -28,4 +26,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default CreateAccount;

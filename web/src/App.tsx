@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Header } from "./components/Header";
-
+import { ThemeProvider } from "styled-components";
+import themes, { ThemeType } from "./styles/themes";
+import GlobalStyle from "./styles/global";
+import AppRoutes from "./Routes";
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="App">
-      <Header />
-    </div>
+    <ThemeProvider theme={themes as ThemeType}>
+      <GlobalStyle />
+      <AppRoutes />
+    </ThemeProvider>
   );
 }
 
