@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-import AccountService from "./AccountService";
 import db from '../../models'
 type TransactionProperties = {
   debitedAccountId: string;
@@ -12,11 +10,16 @@ type FilterParamsProperties = {
   filter: string;
   date: string;
 }
-type FilterOptionsOBject = {
+type FilterOptionsObject = {
   sent: string;
   received: string;
 }
-type objectFilter = keyof FilterOptionsOBject
+type objectFilter = keyof FilterOptionsObject
+type asOptionsObject = {
+  sent: string;
+  received: string;
+}
+type asOption = keyof FilterOptionsObject
 
 
 class TransactionService {
@@ -39,6 +42,13 @@ class TransactionService {
       received: 'creditedAccountId',
     }
 
+    const asOptions = {
+      sent: 'debited',
+      received: 'credited'
+    }
+
+    const asValue = asOptions[filter as asOption]
+
     const columnName = filterOptionsObject[filter as objectFilter]
     let createdAt;
     if (date) {
@@ -52,12 +62,67 @@ class TransactionService {
         [db.Sequelize.Op.between]: [startDate, finalDate]
       }
     }
-    const transactions = await db.Transactions.findAll({
+
+    let transactionsAll;
+    if (!filter) {
+      console.log(filter)
+      const transactionSentRaw = await db.Transactions.findAll({
+        include: [{
+          model: db.Accounts,
+          as: 'debited',
+          include: {
+            model: db.Users,
+          }
+        }],
+        where: {
+          [db.Sequelize.Op.and]: [
+            { debitedAccountId: userAccountId },
+            createdAt && { createdAt }
+          ]
+        },
+        order: [['createdAt', orderBy]],
+        attributes: ['value', 'createdAt']
+      })
+      const transactionReceivedRaw = await db.Transactions.findAll({
+        include: [{
+          model: db.Accounts,
+          as: 'credited',
+          include: {
+            model: db.Users,
+          }
+        }],
+        where: {
+          [db.Sequelize.Op.and]: [
+            { creditedAccountId: userAccountId },
+            createdAt && { createdAt }
+          ]
+        },
+        order: [['createdAt', orderBy]],
+        attributes: ['value', 'createdAt']
+      })
+
+      const transactionSent = transactionSentRaw.map((transaction: any) => ({
+        value: transaction.value,
+        time: transaction.createdAt,
+        transactionType: 'debited',
+        username: transaction.debited.User.username
+      }))
+      const transactionReceived = transactionReceivedRaw.map((transaction: any) => ({
+        value: transaction.value,
+        time: transaction.createdAt,
+        transactionType: 'credited',
+        username: transaction.credited.User.username
+      }))
+
+      const allTransactions = [...transactionSent, ...transactionReceived].sort(((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()))
+      return allTransactions
+    }
+    transactionsAll = await db.Transactions.findAll({
       include: [{
         model: db.Accounts,
+        as: asValue,
         include: {
           model: db.Users,
-          attributes: ['username'],
         }
       }],
       where: {
@@ -67,13 +132,14 @@ class TransactionService {
         ]
       },
       order: [['createdAt', orderBy]],
-      attributes: ['value', 'createdAt', 'debitedAccountId']
+      attributes: ['value', 'createdAt']
     })
 
-    return transactions.map((transaction: any) => ({
+
+    return transactionsAll.map((transaction: any) => ({
       value: transaction.value,
       time: transaction.createdAt,
-      username: transaction.Account.User.username
+      username: transaction[asValue].User.username || 'Null'
     }))
 
   }
@@ -82,3 +148,8 @@ class TransactionService {
 
 
 export default new TransactionService();
+
+
+
+
+

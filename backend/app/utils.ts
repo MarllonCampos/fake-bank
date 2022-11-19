@@ -38,7 +38,7 @@ function matchesArray(array: Array<string>, string: string): boolean {
   return array.some(word => formattedString === word)
 }
 function matchesFilterQuery(string: string): boolean {
-  const filterWords = ['sent', 'received', 'date']
+  const filterWords = ['sent', 'received', '']
   return matchesArray(filterWords, string)
 }
 

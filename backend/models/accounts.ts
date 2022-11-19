@@ -14,6 +14,8 @@ export default (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       // define association here
       Accounts.hasOne(models.Users, { foreignKey: 'accountId' })
+      Accounts.hasMany(models.Transactions, { foreignKey: 'debitedAccountId', as: "credited" })
+      Accounts.hasMany(models.Transactions, { foreignKey: 'creditedAccountId', as: 'debited' })
     }
 
   }

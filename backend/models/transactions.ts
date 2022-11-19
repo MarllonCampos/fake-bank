@@ -16,8 +16,8 @@ export default (sequelize: any, DataTypes: any) => {
 
     static associate(models: any) {
       // define association here
-      Transactions.belongsTo(models.Accounts, { foreignKey: 'debitedAccountId' })
-      Transactions.belongsTo(models.Accounts, { foreignKey: 'creditedAccountId' })
+      Transactions.belongsTo(models.Accounts, { foreignKey: 'debitedAccountId', as: "credited" })
+      Transactions.belongsTo(models.Accounts, { foreignKey: 'creditedAccountId', as: "debited" })
     }
   }
   Transactions.init({

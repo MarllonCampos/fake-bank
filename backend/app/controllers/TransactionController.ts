@@ -68,13 +68,13 @@ class TransactionController {
 
   async index(req: Request, res: Response) {
     const { userAccountId } = req
-    const { orderBy = 'desc', filter = 'sent', date = '' } = req.query
+    const { orderBy = 'desc', filter, date = '' } = req.query
     const formattedOrderBy = String(orderBy).toLowerCase()
     const formattedFilter = String(filter).toLowerCase()
     const formattedDate = String(date)
     console.log(formattedDate)
     if (!matchesFilterQuery(formattedFilter)) {
-      return res.status(400).json({ message: 'Filter must be one of the following options: sent, received or  date' })
+      return res.status(400).json({ message: 'Filter must be one of the following options: sent or received or blank ' })
     }
     if (!matchesOrderByQuery(formattedOrderBy)) {
       return res.status(400).json({ message: 'Orderby must be one of the following options: asc, desc' })
