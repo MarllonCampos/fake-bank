@@ -16,7 +16,6 @@ export const RightSideContainer = styled.div`
   gap: ${props => props.theme.spacing.xxlarge};
 
   padding: 32px 24px;
-  max-width: 420px;
   width: 100%;
   height:100%;
   background-color: ${props => props.theme.backgroundColor};
@@ -29,6 +28,7 @@ export const RightSideContainer = styled.div`
   .login-box {
 
     width: 100%;
+    max-width: 420px;
     
     &__title {
       font-size: 24px;
@@ -39,6 +39,7 @@ export const RightSideContainer = styled.div`
     &__login {
       color: ${props => props.theme.gray[900]};
       margin-top: ${props => props.theme.spacing.large};
+      text-align: center;
 
       font-size: 14px;
       a {
@@ -46,6 +47,13 @@ export const RightSideContainer = styled.div`
         font-weight: bold;
         
       }
+    }
+  }
+
+  @media (min-width: 790px) {
+    max-width: 420px;
+    .login-box{
+      max-width:none;
     }
   }
 
