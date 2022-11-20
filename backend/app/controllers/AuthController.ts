@@ -20,16 +20,19 @@ class AuthController {
       return res.status(400).json({ message: 'User not found' })
     }
     const token = jwt.sign({ id: user.id, accountId: user.accountId }, process.env.JWT_SECRET || 'SECRET', { expiresIn: '1d' })
-    const responseUser = {
-      id: user.id,
-      username: user.username,
-      accountId: user.accountId
-    }
-
+    const accountUser = await db.Accounts.findByPk(user.accountId, {
+      attributes: [["id", "accountId"], "balance", [db.Sequelize.col('"User"."id"'), "userId"],
+      [db.Sequelize.col('"User"."username"'), "username"]],
+      include: [{
+        model: db.Users,
+        attributes: []
+        // attributes: [
+        //   { exclude: ["password"] }
+        // ]
+      }],
+    })
     return res.json({
-      user: {
-        ...responseUser
-      },
+      user: accountUser,
       token
     })
   }

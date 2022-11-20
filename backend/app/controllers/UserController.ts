@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+import db from '../../models'
 import UserService from '../services/UserService'
 import { hashPassword, isPasswordValid } from '../utils'
+import AuthController from './AuthController'
 
 
 class UserController {
@@ -14,7 +16,6 @@ class UserController {
       return res.status(400).json({ message: 'User must have a password' })
     }
     const userExists = await UserService.find(username)
-
     if (userExists) {
       return res.status(409).json({ message: 'This username has been taken already' })
     }
@@ -30,14 +31,13 @@ class UserController {
     }
 
     const hashedPassword = await hashPassword(password)
-    const user = await UserService.store({ username, password: hashedPassword })
-
-    return res.status(201).json({ message: 'User created successfully' })
+    await UserService.store({ username, password: hashedPassword })
+    return AuthController.authenticate(req, res)
   }
 
   async show(req: Request, res: Response) {
-    const { username } = req.params
-    const user = await UserService.find(username)
+    const { userId } = req
+    const user = await db.User.findByPk(userId)
     return res.status(200).json(user)
   }
 
