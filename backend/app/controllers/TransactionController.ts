@@ -74,7 +74,7 @@ class TransactionController {
 
     const transactions = await TransactionService.find(userAccountId, { filter: formattedFilter, date: formattedDate })
 
-    return res.status(200).json({ message: 'Ok', transactions })
+    return res.status(200).json({ transactions })
   }
 }
 
