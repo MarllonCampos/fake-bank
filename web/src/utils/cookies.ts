@@ -14,6 +14,6 @@ function logoutCookie() {
   document.cookie = "token=;"
 }
 
-export { saveCookie, getCookie }
+export { saveCookie, getCookie, logoutCookie }
 
 
