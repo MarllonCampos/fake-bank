@@ -17,6 +17,7 @@ export default {
   },
   backgroundColor: "#FAFAFA",
   textColor: "#FFFFFF",
+  textColorHover: "#F5F5F5",
 
   spacing: {
     small: "4px",
@@ -54,6 +55,7 @@ export interface ThemeType {
   },
   backgroundColor: string,
   textColor: string,
+  textColorHover: string;
   spacing: {
     small: string,
     medium: string,
