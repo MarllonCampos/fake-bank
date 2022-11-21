@@ -11,7 +11,7 @@ interface TransactionStore {
 }
 class Transaction {
   private route = `${import.meta.env.VITE_API_URL}/transaction`
-  private token = getUser()?.token
+  private get token() { return getUser()?.token }
 
   constructor() {
     console.log(this.token)
