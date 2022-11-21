@@ -42,7 +42,6 @@ const Home: React.FC = () => {
       <RightSideContainer>
         {isLoading && <LoaderModal />}
 
-        {isLoading && <p>Loadingup</p>}
         <h1 className="title">&lt;NG.CASH&gt;</h1>
         <div className="login-box">
           <h3 className="login-box__title">Log with your credentials</h3>
