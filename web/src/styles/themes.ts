@@ -5,11 +5,7 @@ export default {
     dark: "#3346F0",
   },
   success: "#51CA73",
-  danger: {
-    main: "#FC5050",
-    light: "#F97171",
-    dark: "#F63131",
-  },
+  danger: "#FC5050",
   gray: {
     '900': "#222222",
     '200': "#BCBCBC",
