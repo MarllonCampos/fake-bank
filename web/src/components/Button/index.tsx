@@ -21,4 +21,15 @@ export default styled.button`
   &:hover {
     background: ${(props) => props.theme.primary.main};
   }
+
+  &:disabled {
+    background: ${(props) => props.theme.gray[100]};
+    color: ${(props) => props.theme.gray[200]};
+    cursor: auto;
+
+    &:hover {
+      background: ${(props) => props.theme.gray[200]};
+      color: ${(props) => props.theme.gray[100]};
+    }
+  }
 `;
