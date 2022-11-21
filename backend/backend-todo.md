@@ -26,7 +26,7 @@
 # Transaction
 
 - [x] Create Transaction
-- [] Read Transaction
+- [x] Read Transaction
   - Filter by cash-in
   - Filter by cash-out
   - Filter by date -> Applied asc and desc
