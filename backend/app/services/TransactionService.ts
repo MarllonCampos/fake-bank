@@ -6,7 +6,6 @@ type TransactionProperties = {
 }
 
 type FilterParamsProperties = {
-  orderBy: string;
   filter: string;
   date: string;
 }
@@ -35,7 +34,7 @@ class TransactionService {
 
 
   async find(userAccountId: string, filterParams: FilterParamsProperties) {
-    const { filter, orderBy, date } = filterParams
+    const { filter, date } = filterParams
 
     const filterOptionsObject = {
       sent: 'debitedAccountId',
@@ -62,11 +61,9 @@ class TransactionService {
         [db.Sequelize.Op.between]: [startDate, finalDate]
       }
     }
-
-    let transactionsAll;
-    if (!filter) {
-      console.log(filter)
-      const transactionSentRaw = await db.Transactions.findAll({
+    let transactionSentRaw, transactionReceivedRaw, transactionSent, transactionReceived
+    if (filter === "sent" || filter == "") {
+      transactionSentRaw = await db.Transactions.findAll({
         include: [{
           model: db.Accounts,
           as: 'debited',
@@ -80,10 +77,19 @@ class TransactionService {
             createdAt && { createdAt }
           ]
         },
-        order: [['createdAt', orderBy]],
         attributes: ['value', 'createdAt']
       })
-      const transactionReceivedRaw = await db.Transactions.findAll({
+
+      transactionSent = transactionSentRaw.map((transaction: any) => ({
+        value: transaction.value,
+        time: transaction.createdAt,
+        transactionType: 'debited',
+        username: transaction.debited.User.username
+      }))
+    }
+
+    if (filter === "received" || filter == "") {
+      transactionReceivedRaw = await db.Transactions.findAll({
         include: [{
           model: db.Accounts,
           as: 'credited',
@@ -97,50 +103,21 @@ class TransactionService {
             createdAt && { createdAt }
           ]
         },
-        order: [['createdAt', orderBy]],
         attributes: ['value', 'createdAt']
       })
 
-      const transactionSent = transactionSentRaw.map((transaction: any) => ({
-        value: transaction.value,
-        time: transaction.createdAt,
-        transactionType: 'debited',
-        username: transaction.debited.User.username
-      }))
-      const transactionReceived = transactionReceivedRaw.map((transaction: any) => ({
+      transactionReceived = transactionReceivedRaw.map((transaction: any) => ({
         value: transaction.value,
         time: transaction.createdAt,
         transactionType: 'credited',
         username: transaction.credited.User.username
       }))
-
-      const allTransactions = [...transactionSent, ...transactionReceived].sort(((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()))
-      return allTransactions
     }
-    transactionsAll = await db.Transactions.findAll({
-      include: [{
-        model: db.Accounts,
-        as: asValue,
-        include: {
-          model: db.Users,
-        }
-      }],
-      where: {
-        [db.Sequelize.Op.and]: [
-          { [columnName]: userAccountId },
-          createdAt && { createdAt }
-        ]
-      },
-      order: [['createdAt', orderBy]],
-      attributes: ['value', 'createdAt']
-    })
 
+    const allTransactionArray = filter == "sent" ? [...transactionSent] : filter === "received" ? [...transactionReceived] : [...transactionSent, ...transactionReceived]
+    const allTransactions = allTransactionArray.sort(((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()))
+    return allTransactions
 
-    return transactionsAll.map((transaction: any) => ({
-      value: transaction.value,
-      time: transaction.createdAt,
-      username: transaction[asValue].User.username || 'Null'
-    }))
 
   }
 

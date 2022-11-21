@@ -23,7 +23,8 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
     req.userId = id
     req.userAccountId = accountId
     return next()
-  } catch {
+  } catch (error) {
+    console.log(error)
     return res.status(401).json({ message: 'You lost connection, please log again' })
   }
 }

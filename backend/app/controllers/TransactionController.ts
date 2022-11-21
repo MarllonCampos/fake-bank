@@ -68,23 +68,13 @@ class TransactionController {
 
   async index(req: Request, res: Response) {
     const { userAccountId } = req
-    const { orderBy = 'desc', filter, date = '' } = req.query
-    const formattedOrderBy = String(orderBy).toLowerCase()
+    const { filter = "", date = '' } = req.query
     const formattedFilter = String(filter).toLowerCase()
     const formattedDate = String(date)
-    console.log(formattedDate)
-    if (!matchesFilterQuery(formattedFilter)) {
-      return res.status(400).json({ message: 'Filter must be one of the following options: sent or received or blank ' })
-    }
-    if (!matchesOrderByQuery(formattedOrderBy)) {
-      return res.status(400).json({ message: 'Orderby must be one of the following options: asc, desc' })
-    }
-    const transactions = await TransactionService.find(userAccountId, { orderBy: formattedOrderBy, filter: formattedFilter, date: formattedDate })
 
-    const filteredTransactions = transactions.map((transaction: any) => transaction.Account)
+    const transactions = await TransactionService.find(userAccountId, { filter: formattedFilter, date: formattedDate })
 
-
-    return res.status(200).json({ message: 'Ok', body: transactions })
+    return res.status(200).json({ message: 'Ok', transactions })
   }
 }
 
