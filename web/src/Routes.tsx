@@ -32,7 +32,6 @@ export default function AppRoutes() {
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   let token = getCookie();
-  console.log(token);
   if (!token) {
     return <Navigate to="/" replace />;
   }

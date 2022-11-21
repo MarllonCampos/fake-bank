@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 
 interface UserData {
   balance: number;
@@ -18,9 +13,7 @@ interface UserProviderProps {
 
 export const UserContext = createContext({} as UserData);
 
-export function UserProvider({
-  children,
-}: UserProviderProps) {
+export function UserProvider({ children }: UserProviderProps) {
   const [username, setUsername] = useState("");
   const [balance, setBalance] = useState(0);
 

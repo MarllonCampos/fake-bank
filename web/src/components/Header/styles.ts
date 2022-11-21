@@ -43,6 +43,7 @@ export const Container = styled.div`
   }
   
   .signout {
+    cursor:pointer;
     margin-left: auto;
     width: var(--font-size);
     height: var(--font-size);
