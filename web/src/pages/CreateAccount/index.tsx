@@ -7,17 +7,24 @@ import phone from "../../assets/phone.png";
 import { Helmet } from "react-helmet";
 import User from "../../services/user";
 import { UserContext } from "../../contexts/UserContext";
+import { getUser, saveLocalStorage } from "../../utils/localStorage";
 const CreateAccount: React.FC = () => {
   const navigate = useNavigate();
   const { updateBalance, updateUsername } = useContext(UserContext);
   const handleSubmit = async (user: AccountObject) => {
     try {
-      const { balance, username } = await User.createUser(user);
+      const {
+        userInfo: { balance, username, userId },
+        token,
+      } = await User.createUser(user);
       updateBalance(balance);
       updateUsername(username);
+      saveLocalStorage({ token, id: userId, balance, username });
+
+      console.log(getUser()?.id);
       navigate("/myaccount");
-    } catch (error) {
-      console.log(error);
+    } catch ({ message }) {
+      alert(message);
     }
   };
 

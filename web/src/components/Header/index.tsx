@@ -2,13 +2,13 @@ import { Container } from "./styles";
 import { SignOut, CurrencyEth } from "phosphor-react";
 import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
-import { logoutCookie } from "../../utils/cookies";
+import { logoutUser } from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
 function Header() {
   const navigate = useNavigate();
 
   function signoutAction() {
-    logoutCookie();
+    logoutUser();
     return navigate("/");
   }
   const { balance, username } = useContext(UserContext);

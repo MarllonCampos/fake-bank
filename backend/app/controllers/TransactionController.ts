@@ -22,6 +22,7 @@ class TransactionController {
       return res.status(400).json({ message: "Value must by greater than 0" })
     }
     const creditedUser = await UserService.find(creditedUsername)
+    console.log(creditedUser.accountId);
 
     if (!creditedUser) {
       return res.status(404).json({ message: "Username not found" })
@@ -49,7 +50,7 @@ class TransactionController {
 
       const userNewBalance = await AccountService.update(userAccountId, newDebitedUserBalance, transaction)
 
-      const newCreditedUserBalance = creditedUserAccount.balance + value
+      const newCreditedUserBalance = Number(creditedUserAccount.balance) + Number(value)
       await AccountService.update(creditedUserAccount.id, newCreditedUserBalance, transaction)
 
       await TransactionService.store({ debitedAccountId: accountUser.id, creditedAccountId: creditedUserAccount.id, value }, transaction)
@@ -62,7 +63,7 @@ class TransactionController {
     } catch (error) {
       transaction.rollback()
       console.log(error)
-      return res.status(400).json({ error })
+      return res.status(500).json({ message: error })
     }
   }
 

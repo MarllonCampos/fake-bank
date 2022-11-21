@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
+import { getUser } from "../utils/localStorage";
 
 interface UserData {
   balance: number;
@@ -14,8 +15,9 @@ interface UserProviderProps {
 export const UserContext = createContext({} as UserData);
 
 export function UserProvider({ children }: UserProviderProps) {
-  const [username, setUsername] = useState("");
-  const [balance, setBalance] = useState(0);
+  const user = getUser();
+  const [username, setUsername] = useState(user?.username ?? "");
+  const [balance, setBalance] = useState(user?.balance ?? 0);
 
   function updateBalance(newBalance: number) {
     setBalance(newBalance);

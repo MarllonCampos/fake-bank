@@ -28,6 +28,7 @@ const Balance = () => {
         date: dateSelection,
         filter: filter ?? "",
       });
+      console.log(status);
       if (status === 401) {
         navigate("/");
       }
@@ -98,7 +99,7 @@ const Balance = () => {
         ) : (
           <>
             {transactions?.map((data) => (
-              <Transfer {...data} />
+              <Transfer {...data} key={data.time} />
             ))}
           </>
         )}

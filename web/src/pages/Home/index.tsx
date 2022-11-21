@@ -8,6 +8,8 @@ import User from "../../services/user";
 
 import { Helmet } from "react-helmet";
 import { UserContext } from "../../contexts/UserContext";
+import LoaderModal from "../../components/LoaderModal";
+import { getUser, saveLocalStorage } from "../../utils/localStorage";
 const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateBalance, updateUsername } = useContext(UserContext);
@@ -15,12 +17,18 @@ const Home: React.FC = () => {
   async function handleSubmit(user: AccountObject) {
     try {
       setIsLoading(true);
-      const { balance, username } = await User.login(user);
+      const {
+        userInfo: { balance, username, userId },
+        token,
+      } = await User.login(user);
       updateBalance(balance);
       updateUsername(username);
+      saveLocalStorage({ token, id: userId, balance, username });
+
       navigate("/myaccount");
-    } catch (error) {
-      console.log(error);
+    } catch ({ message }) {
+      alert(message);
+      console.log(message);
     } finally {
       setIsLoading(false);
     }
@@ -32,6 +40,8 @@ const Home: React.FC = () => {
       </Helmet>
       <LeftSideAccount image={phoneTilted} />
       <RightSideContainer>
+        {isLoading && <LoaderModal />}
+
         {isLoading && <p>Loadingup</p>}
         <h1 className="title">&lt;NG.CASH&gt;</h1>
         <div className="login-box">

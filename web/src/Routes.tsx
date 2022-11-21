@@ -6,7 +6,7 @@ import Cashout from "./pages/Cashout";
 import CreateAccount from "./pages/CreateAccount";
 import Home from "./pages/Home";
 import MyAccount from "./pages/MyAccount";
-import { getCookie } from "./utils/cookies";
+import { getUser } from "./utils/localStorage";
 
 export default function AppRoutes() {
   return (
@@ -31,8 +31,9 @@ export default function AppRoutes() {
 }
 
 function RequireAuth({ children }: { children: JSX.Element }) {
-  let token = getCookie();
-  if (!token) {
+  let user = getUser();
+  console.log(user?.token, "RequireAuth");
+  if (!user || !user?.token) {
     return <Navigate to="/" replace />;
   }
 

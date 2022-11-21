@@ -19,18 +19,19 @@ class AuthController {
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'User not found' })
     }
-    const token = jwt.sign({ id: user.id, accountId: user.accountId }, process.env.JWT_SECRET || 'SECRET', { expiresIn: '1d' })
-    const accountUser = await db.Accounts.findByPk(user.accountId, {
-      attributes: [["id", "accountId"], "balance", [db.Sequelize.col('"User"."id"'), "userId"],
-      [db.Sequelize.col('"User"."username"'), "username"]],
-      include: [{
-        model: db.Users,
-        attributes: []
-        // attributes: [
-        //   { exclude: ["password"] }
-        // ]
-      }],
+    const userId = user.id
+    const userAccountId = user.accountId
+
+    const token = jwt.sign({ id: user.id, accountId: userAccountId }, "SECRET", { expiresIn: '1d' })
+    const accountUser = await db.Users.findByPk(user.id, {
+      attributes: [["id", "userId"], "username", "accountId", [db.Sequelize.col('"Account"."balance"'), "balance"]],
+      include: {
+        model: db.Accounts,
+        attributes: ['balance']
+      }
     })
+    console.log({ token });
+
     return res.json({
       user: accountUser,
       token

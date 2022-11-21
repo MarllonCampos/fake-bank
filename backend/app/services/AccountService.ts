@@ -10,8 +10,10 @@ class AccountService {
   }
 
   async find(accountId: string) {
+    console.log(accountId)
     const accountInfo = await db.Accounts.findByPk(accountId)
-    if (!accountInfo) throw new Error('User not found')
+    console.log(accountInfo.balance)
+    if (!accountInfo) throw ('User not found')
     return accountInfo
   }
 
