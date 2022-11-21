@@ -4,6 +4,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { useContext } from "react";
 import { logoutUser } from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 function Header() {
   const navigate = useNavigate();
 
@@ -15,7 +16,9 @@ function Header() {
   return (
     <Container>
       <div className="userInfo">
-        <h1 className="userInfo__username">{username}</h1>
+        <Link to="/myaccount" className="userInfo__username">
+          <h1>{username}</h1>
+        </Link>
         <p className="userInfo__balance">
           {balance}
           <CurrencyEth size={48} className="currency" />

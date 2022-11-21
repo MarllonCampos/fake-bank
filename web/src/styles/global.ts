@@ -28,5 +28,8 @@ export default createGlobalStyle<{ theme: ThemeType }>`
 
   a {
     text-decoration:none;
+    &:visited {
+      all: inherit;
+    }
   }
 `

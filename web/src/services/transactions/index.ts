@@ -47,7 +47,20 @@ class Transaction {
     const { ok: requestSuccess, status } = res
 
     if (!requestSuccess) {
-      const message = status === 401 && "You lost connection, please log again"
+
+      let message;
+      switch (status) {
+        case 401:
+          message = "You lost connection, please log again"
+          break;
+        case 406:
+          message = "You can't realize transfers to yourself"
+          break;
+        default:
+          console.log(status)
+          message = "An error has occurred please contact the I.T Office"
+      }
+
       throw ({ requestSuccess, status, message })
     }
     const { user: { balance: newBalance }, message } = await res.json()
