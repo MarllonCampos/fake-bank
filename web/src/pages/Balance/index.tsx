@@ -1,5 +1,5 @@
 import { CurrencyEth, SpinnerGap } from "phosphor-react";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Route, Routes, RouteProps, Navigate, useNavigate, Outlet } from "react-router-dom";
 import Button from "../../components/Button";

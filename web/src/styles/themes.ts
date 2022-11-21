@@ -39,11 +39,7 @@ export interface ThemeType {
     dark: string,
   },
   success: string,
-  danger: {
-    main: string,
-    light: string,
-    dark: string,
-  },
+  danger: string,
   gray: {
     '900': string,
     '200': string,

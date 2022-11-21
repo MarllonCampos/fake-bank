@@ -24,12 +24,31 @@ export const Container = styled.form`
   .transfer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: ${props => props.theme.spacing.xlarge};
+    width:100%;
 
     & > div {
       label {
         margin-right: ${props => props.theme.spacing.medium}
       }
+   
+    }
+
+    @media (max-width: 820px) {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      padding: 0 ${props => props.theme.spacing.large};
+
+      & > div {
+    
+      display: flex;
+      justify-content: space-between;
+      align-items:center;
+      width:100%;
+    }
+
     }
   }
 

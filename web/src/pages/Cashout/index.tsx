@@ -6,6 +6,7 @@ import Input from "../../components/Input";
 import Modal from "../../components/LoaderModal";
 import { UserContext } from "../../contexts/UserContext";
 import Transactions from "../../services/transactions";
+import { updateLocalStorage } from "../../utils/localStorage";
 
 import { Container } from "./styles";
 
@@ -43,15 +44,12 @@ const Cashout = () => {
       }
 
       const { status, message, newBalance } = await Transactions.store({ creditedUsername, value });
-      console.log(newBalance);
       updateBalance(newBalance);
+      updateLocalStorage({ key: "balance", value: newBalance });
       alert(message);
     } catch ({ message, status, requestSuccess }) {
       console.log(message, "catch");
       alert(message);
-      // if (status === 401) {
-      //   navigate("/");
-      // }
     } finally {
       setIsTransactionLoading(false);
     }
