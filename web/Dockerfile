@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:latest
 WORKDIR /usr
 COPY package*.json /
 COPY tsconfig.json /
