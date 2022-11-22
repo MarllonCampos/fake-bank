@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  api:
+    networks:
+      frontend:
+    container_name: backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      BACKEND_PORT: 3000
+    build: "/backend"
+    ports:  
+      - 3000:3000
+  
+  web:
+    networks:
+      frontend:
+ 
+    container_name: frontend
+    restart: always
+    environment:
+      FRONTEND_PORT: ${FRONTEND_PORT}
+    env_file:
+      - /web/.env
+    build: "/web"
+    ports:  
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+
+networks:
+  frontend:
+    driver: 
+      bridge
