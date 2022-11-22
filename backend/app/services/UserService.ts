@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import AccountService from "./AccountService";
-import db from '../../models'
+import { Users } from '../../models';
 
 type UserProperties = {
   username: string;
@@ -11,12 +11,12 @@ type UserProperties = {
 class UserService {
   async store(body: UserProperties) {
     const formattedUsername = body.username.toLowerCase()
-    const account = await AccountService.store()
-    const user = await db.Users.create({
+    const { id: accountId, balance } = await AccountService.store()
+    const user = await Users.create({
       id: uuidv4(),
       username: formattedUsername,
       password: body.password,
-      accountId: account.id
+      accountId
     })
 
 
@@ -25,13 +25,13 @@ class UserService {
   async find(username: string) {
     const formattedUsername = username.toLowerCase();
 
-    return db.Users.findOne({ where: { username: formattedUsername }, attributes: ['username', 'accountId'] })
+    return Users.findOne({ where: { username: formattedUsername }, attributes: ['username', 'accountId'] })
       .then((user: any) => user)
       .catch((error: any) => undefined)
   }
 
   async findAll() {
-    return await db.Users.findAll({ attributes: ["username", "accountId"] })
+    return await Users.findAll({ attributes: ["username", "accountId"] })
   }
 }
 

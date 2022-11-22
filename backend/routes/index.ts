@@ -7,9 +7,9 @@ import TransactionRouter from './transactions'
 
 const route = Router();
 
-route.post('/login', AuthController.authenticate)
+// route.post('/login', AuthController.authenticate)
 route.post('/user', UserController.store)
-route.use(authMiddleware)
+// route.use(authMiddleware)
 route.use('/user', UserRouter)
 route.use('/transaction', TransactionRouter)
 

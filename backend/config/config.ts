@@ -1,22 +1,15 @@
-import { Dialect } from "sequelize"
-
+import { Dialect, Sequelize } from 'sequelize'
 require('dotenv').config()
-export default {
 
-  "username": process.env.DB_USER,
-  "password": process.env.DB_PASS,
-  "database": process.env.DB_NAME,
-  "host": process.env.DB_HOST,
-  "dialect": "postgres" as Dialect,
-  "define": {
-    "timestamps": false
-  },
-  "logging": true
-} as {
-  username: string
-  password: string
-  database: string
-  host: string
-  dialect: Dialect
-  define: any,
-}
+const dbUser = process.env.DB_USER as string
+const dbPassword = process.env.DB_PASS
+const dbName = process.env.DB_NAME as string
+const dbHost = process.env.DB_HOST
+const dbDriver = "postgres"
+
+const sequelizeConnection = new Sequelize(dbName, dbUser, dbPassword, {
+  host: dbHost,
+  dialect: dbDriver
+})
+
+export default sequelizeConnection

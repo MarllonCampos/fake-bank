@@ -1,38 +1,143 @@
-'use strict';
+import sequelize, { DataTypes, Model, UUIDV4 } from 'sequelize'
+import sequelizeConnection from '../config/config';
 
-import fs from 'fs';
-import path from 'path';
-import { Sequelize, DataTypes } from 'sequelize';
-import { SequelizeMethod } from 'sequelize/types/utils';
-const basename = path.basename(__filename);
-import config from '../config/config'
-const db: any = {};
 
-const sequelize: SequelizeMethod = new Sequelize(config.database, config.username, config.password, config);
+interface AccountsAttibutes {
+  id?: string;
+  balance: number;
+}
+interface TransactionsAttibutes {
+  id?: string;
+  value: number;
+  createdAt?: Date;
+  debitedAccountId: string;
+  creditedAccountId: string;
 
-fs.readdirSync(__dirname)
-  .filter((file: string) => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.ts');
-  })
-  .forEach((file: any) => {
-    const model = require(path.join(__dirname, file))
-    const modelRun = model.default(sequelize, DataTypes)
-    const modelName = modelRun.name
-    db[modelName] = modelRun;
-  })
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
+}
+
+interface UserAttributes {
+  id?: string;
+  username: string;
+  password: string;
+  accountId: string
+}
+
+class Accounts extends Model<AccountsAttibutes> implements AccountsAttibutes {
+  public id?: string;
+  public balance!: number;
+}
+Accounts.init({
+  id: {
+    type: DataTypes.STRING,
+    defaultValue: UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  },
+  balance: {
+    type: DataTypes.INTEGER,
+    defaultValue: 100,
+  },
+}, {
+  sequelize: sequelizeConnection,
+  modelName: 'Accounts',
 });
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+
+class Users extends Model<UserAttributes> implements UserAttributes {
+  public id?: string;
+  public username!: string;
+  public password!: string;
+  public accountId!: string
+
+}
+Users.init({
+  id: {
+    type: DataTypes.STRING,
+    defaultValue: UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  accountId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+      model: Accounts,
+      key: 'id'
+    }
+  }
+}, {
+  sequelize: sequelizeConnection,
+  modelName: 'Users',
+})
+
+
+class Transactions extends Model<TransactionsAttibutes> implements TransactionsAttibutes {
+  id?: string;
+  value!: number;
+  debitedAccountId!: string;
+  creditedAccountId!: string;
+  public readonly createdAt?: Date;
+
+}
+Transactions.init({
+  id: {
+    type: DataTypes.STRING,
+    defaultValue: UUIDV4,
+    allowNull: false,
+    primaryKey: true,
+  },
+  value: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: sequelize.literal('NOW()')
+  },
+  debitedAccountId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+      model: Accounts,
+      key: 'id'
+    }
+  },
+  creditedAccountId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    references: {
+      model: Accounts,
+      key: 'id'
+    }
+  }
+}, {
+  sequelize: sequelizeConnection,
+  modelName: 'Transactions',
+});
+
+
+Accounts.hasOne(Users, { foreignKey: 'accountId' })
+Accounts.hasMany(Transactions, { foreignKey: 'debitedAccountId', as: "credited" })
+Accounts.hasMany(Transactions, { foreignKey: 'creditedAccountId', as: 'debited' })
 
 
 
 
-export default db
+Transactions.belongsTo(Accounts, { foreignKey: 'debitedAccountId', as: "credited" })
+Transactions.belongsTo(Accounts, { foreignKey: 'creditedAccountId', as: "debited" })
 
 
 
-// export default db;
+
+Users.belongsTo(Accounts, { foreignKey: 'accountId' })
+
+
+export { Accounts, Transactions, Users }

@@ -2,9 +2,8 @@ import { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import AccountService from '../services/AccountService';
 import UserService from '../services/UserService';
-import db from '../../models';
 import TransactionService from '../services/TransactionService';
-import { matchesFilterQuery, matchesOrderByQuery } from '../utils';
+import sequelizeConnection from '../../config/config';
 dotenv.config()
 
 class TransactionController {
@@ -27,7 +26,7 @@ class TransactionController {
     if (!creditedUser) {
       return res.status(404).json({ message: "Username not found" })
     }
-    const transaction = await db.sequelize.transaction();
+    const transaction = await sequelizeConnection.transaction()
 
     try {
       const creditedUserAccount = await AccountService.find(creditedUser.accountId)

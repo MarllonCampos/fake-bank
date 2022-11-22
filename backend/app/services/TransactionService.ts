@@ -1,4 +1,5 @@
-import db from '../../models'
+import { Accounts, Transactions, Users } from "../../models";
+import { Op } from 'sequelize'
 type TransactionProperties = {
   debitedAccountId: string;
   creditedAccountId: string;
@@ -23,9 +24,9 @@ type asOption = keyof FilterOptionsObject
 
 class TransactionService {
   async store({ debitedAccountId, creditedAccountId, value }: TransactionProperties, transaction: any) {
-    await db.Transactions.create({
-      debitedAccountId,
-      creditedAccountId,
+    await Transactions.create({
+      creditedAccountId: creditedAccountId || "",
+      debitedAccountId: debitedAccountId || "",
       value
     }, { transaction })
   }
@@ -58,21 +59,21 @@ class TransactionService {
       finalDate.setUTCHours(23, 59, 59, 999);
 
       createdAt = {
-        [db.Sequelize.Op.between]: [startDate, finalDate]
+        [Op.between]: [startDate, finalDate]
       }
     }
     let transactionSentRaw, transactionReceivedRaw, transactionSent, transactionReceived
     if (filter === "sent" || filter == "") {
-      transactionSentRaw = await db.Transactions.findAll({
+      transactionSentRaw = await Transactions.findAll({
         include: [{
-          model: db.Accounts,
+          model: Accounts,
           as: 'debited',
-          include: {
-            model: db.Users,
-          }
+          include: [{
+            model: Users,
+          }]
         }],
         where: {
-          [db.Sequelize.Op.and]: [
+          [Op.gt]: [
             { debitedAccountId: userAccountId },
             createdAt && { createdAt }
           ]
@@ -84,21 +85,21 @@ class TransactionService {
         value: transaction.value,
         time: transaction.createdAt,
         transactionType: 'debited',
-        username: transaction.debited.User.username
+        username: transaction?.debited.User.username
       }))
     }
 
     if (filter === "received" || filter == "") {
-      transactionReceivedRaw = await db.Transactions.findAll({
+      transactionReceivedRaw = await Transactions.findAll({
         include: [{
-          model: db.Accounts,
+          model: Accounts,
           as: 'credited',
-          include: {
-            model: db.Users,
-          }
+          include: [{
+            model: Users,
+          }]
         }],
         where: {
-          [db.Sequelize.Op.and]: [
+          [Op.and]: [
             { creditedAccountId: userAccountId },
             createdAt && { createdAt }
           ]

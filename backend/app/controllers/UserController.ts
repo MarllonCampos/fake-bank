@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import db from '../../models'
+import { Users } from '../../models'
 import UserService from '../services/UserService'
 import { hashPassword, isPasswordValid } from '../utils'
 import AuthController from './AuthController'
@@ -44,7 +44,7 @@ class UserController {
 
   async show(req: Request, res: Response) {
     const { userId } = req
-    const user = await db.User.findByPk(userId)
+    const user = await Users.findByPk(userId)
     return res.status(200).json(user)
   }
 
