@@ -3,12 +3,12 @@
 import fs from 'fs';
 import path from 'path';
 import { Sequelize, DataTypes } from 'sequelize';
+import { SequelizeMethod } from 'sequelize/types/utils';
 const basename = path.basename(__filename);
 import config from '../config/config'
 const db: any = {};
 
-
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize: SequelizeMethod = new Sequelize(config.database, config.username, config.password, config);
 
 fs.readdirSync(__dirname)
   .filter((file: string) => {

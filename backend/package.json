@@ -18,7 +18,9 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "dev": "yarn tsnd --files --respawn server.ts"
+    "dev": "yarn tsnd --files --respawn index.ts",
+    "build": "tsc -p .",
+    "start": "node build"
   },
   "devDependencies": {
     "@types/continuation-local-storage": "^3.2.4",

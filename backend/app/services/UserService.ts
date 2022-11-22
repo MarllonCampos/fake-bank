@@ -24,8 +24,10 @@ class UserService {
   }
   async find(username: string) {
     const formattedUsername = username.toLowerCase();
-    const user = await db.Users.findOne({ where: { username: formattedUsername }, attributes: ['username', 'accountId'] });
-    return user
+
+    return db.Users.findOne({ where: { username: formattedUsername }, attributes: ['username', 'accountId'] })
+      .then((user: any) => user)
+      .catch((error: any) => undefined)
   }
 
   async findAll() {

@@ -8,6 +8,7 @@ import AuthController from './AuthController'
 class UserController {
 
   async store(req: Request, res: Response) {
+    console.log("USER STORE")
     const { username, password } = req.body
     if (!username) {
       return res.status(400).json({ message: 'User must have a username' })
@@ -15,13 +16,19 @@ class UserController {
     if (!password) {
       return res.status(400).json({ message: 'User must have a password' })
     }
-    const userExists = await UserService.find(username)
-    if (userExists) {
-      return res.status(409).json({ message: 'This username has been taken already' })
-    }
 
     if (!username || username.length < 3) {
       return res.status(400).json({ message: 'User must have a username with atleast 3 characters' })
+    }
+
+    const userExists = await UserService.find(username)
+
+    if (userExists === undefined) {
+      return res.sendStatus(500)
+    }
+
+    if (userExists) {
+      return res.status(409).json({ message: 'This username has been taken already' })
     }
 
 

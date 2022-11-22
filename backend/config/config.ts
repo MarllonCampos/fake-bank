@@ -11,7 +11,7 @@ export default {
   "define": {
     "timestamps": false
   },
-  "logging": false
+  "logging": true
 } as {
   username: string
   password: string
