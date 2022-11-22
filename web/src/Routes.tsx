@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { Route, Routes, RouteProps, Navigate } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
 import Balance from "./pages/Balance";
