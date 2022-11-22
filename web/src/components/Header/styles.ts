@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 export const Container = styled.div`
   --gap:${props => props.theme.spacing.xxlarge};
-  --font-size: 48px;
+  --font-size: 36px;
 
   max-width: 800px;
   width: 100%;
@@ -25,7 +25,10 @@ export const Container = styled.div`
     justify-content: space-between;
 
     &__username {
-      font-size: var(--font-size);
+      h1 {
+        font-size: var(--font-size);
+
+      }
     }
 
     &__balance { 

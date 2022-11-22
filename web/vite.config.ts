@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const port = Number(process.env.FRONTEND_PORT)
+  const port = Number(process.env.FRONTEND_PORT) || Number(env.FRONTEND_PORT)
   return {
     plugins: [react()],
     server: {
