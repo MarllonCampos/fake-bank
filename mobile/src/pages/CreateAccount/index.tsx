@@ -1,7 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../context/UserContext";
+import { saveAsyncStorage } from "../../utils/asyncStorage";
+import Toast from "react-native-toast-message";
 
 type StackRoutes = {
   Home: undefined;
@@ -11,16 +13,56 @@ type StackRoutes = {
 };
 
 const CreateAccount = () => {
-  const { updateToken } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
   const navigateToCreateAccount = () => {
     navigation.navigate("CreateAccount");
   };
 
-  const logUser = () => {
-    // console.log("Logs?");
-    updateToken("3ASDADSA");
+  const logUser = async () => {
+    const headers = new Headers();
+
+    const userLoginData = { password, username };
+    headers.append("content-type", "application/json");
+    const data = await fetch("http://192.168.0.101:3000/user", {
+      method: "POST",
+      body: JSON.stringify(userLoginData),
+      headers,
+    });
+    if (!data.ok) {
+      const response = await data.json();
+      console.log(response);
+      Toast.show({
+        type: "error",
+        text1: response.message,
+        visibilityTime: 1500,
+      });
+
+      return;
+    }
+    const response = await data.json();
+    const { userId: id, balance, token } = response;
+    const userData = { id, balance, username, token };
+    saveAsyncStorage(userData)
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Successfully Logged",
+        });
+        setTimeout(() => {
+          setUser(userData);
+        }, 1500);
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error,
+        });
+      });
   };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle={"default"} />
@@ -29,8 +71,8 @@ const CreateAccount = () => {
       </Text>
       <View style={styles.userInfo}>
         <Text style={styles.instructions}>Create an account</Text>
-        <TextInput placeholder="username" style={styles.input} />
-        <TextInput secureTextEntry placeholder="password" style={styles.input} />
+        <TextInput placeholder="username" style={styles.input} onChangeText={setUsername} />
+        <TextInput secureTextEntry placeholder="password" style={styles.input} onChangeText={setPassword} />
         <TouchableOpacity style={styles.createAccount} onPress={logUser}>
           <Text style={styles.createAccountText}>Create Account</Text>
         </TouchableOpacity>
@@ -41,6 +83,7 @@ const CreateAccount = () => {
           </Text>
         </Text>
       </View>
+      <Toast />
     </View>
   );
 };

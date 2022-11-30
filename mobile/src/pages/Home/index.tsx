@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import { StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../../context/UserContext";
-
+import { saveAsyncStorage } from "../../utils/asyncStorage";
+import Toast from "react-native-toast-message";
 const Home = () => {
-  const { updateToken } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
@@ -12,16 +13,50 @@ const Home = () => {
     navigation.navigate("CreateAccount");
   };
 
-  const logUser = () => {
-    // console.log("Logs?");\
-    const userData = {
-      password,
-      username,
-      token: "",
-    };
+  const logUser = async () => {
+    const headers = new Headers();
 
-    console.log(userData);
-    // updateToken("3ASDADSA");
+    const userLoginData = { password, username };
+    headers.append("content-type", "application/json");
+    const data = await fetch("http://192.168.0.101:3000/login", {
+      method: "POST",
+      body: JSON.stringify(userLoginData),
+      headers,
+    });
+    if (!data.ok) {
+      const response = await data.json();
+      console.log(response);
+      Toast.show({
+        type: "error",
+        text1: response.message,
+        visibilityTime: 1500,
+      });
+
+      return;
+    }
+    const response = await data.json();
+    const {
+      user: { userId: id, balance },
+      token,
+    } = response;
+    const userData = { id, balance, username, token };
+    console.log(userData, { response });
+    saveAsyncStorage(userData)
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Successfully Logged",
+        });
+        setTimeout(() => {
+          setUser(userData);
+        }, 1500);
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: error,
+        });
+      });
   };
   return (
     <View style={styles.container}>
@@ -43,6 +78,7 @@ const Home = () => {
           </Text>
         </Text>
       </View>
+      <Toast />
     </View>
   );
 };
