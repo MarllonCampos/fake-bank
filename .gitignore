@@ -12,6 +12,22 @@
 # next.js
 /.next/
 /out/
+node_modules/
+**/dist/
+**/npm-debug.*
+**/*.jks
+**/*.p8
+**/*.p12
+**/*.key
+**/*.mobileprovision
+**/*.orig.*
+web-build/
+**/.expo
+**/.gitignore
+# macOS
+**/.DS_Store
+
+
 
 # production
 **/build
